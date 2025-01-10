@@ -3,17 +3,17 @@ const bcrypt = require('bcryptjs');
 const db = require('../config/database');
 
 // 회원가입
-exports.registerUser = async ({ userID, userName, userAge, phone, university, studentId, department, grade, password }) => {
+exports.registerUser = async ({ userID, password, userName, userAge, phone, university, studentId, department, grade }) => {
   try {
     // 비밀번호 암호화
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // 사용자 데이터 저장
     const userSql = `
-      INSERT INTO users (userID, userName, userAge, phone, university, studentId, department, grade, password) 
+      INSERT INTO users (userID, password, userName, userAge, phone, university, studentId, department, grade) 
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-    await db.query(userSql, [userID, userName, userAge, phone, university, studentId, department, grade, hashedPassword]);
+    await db.query(userSql, [userID, hashedPassword, userName, userAge, phone, university, studentId, department, grade]);
 
     return { message: 'User registered successfully' };
   } catch (error) {
