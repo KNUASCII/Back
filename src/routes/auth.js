@@ -4,9 +4,6 @@ const { validateAuthInput, validatePhoneInput } = require('../middlewares/valida
 
 const router = express.Router();
 
-// POST /api/auth/send-code - 인증 코드 전송
-router.post('/send-code', validatePhoneInput, authController.sendVerificationCode);
-
 // POST /api/auth/register - 회원가입
 router.post('/register', validateAuthInput, authController.register);
 

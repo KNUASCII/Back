@@ -47,7 +47,7 @@ exports.loginUser = async ({ userID, password }) => {
 // 비밀번호 변경 - 유저가 설정에서 바꾸는 과정
 exports.changeUserPassword = async (userId, currentPassword, newPassword) => {
   try {
-    const sql = 'SELECT * FROM users WHERE id = ?';
+    const sql = 'SELECT * FROM users WHERE userID = ?';
     const [results] = await db.query(sql, [userId]);
 
     if (results.length === 0) {
