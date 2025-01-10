@@ -1,6 +1,7 @@
 const axios = require('axios');
 const db = require('../config/database');
 
+<<<<<<< Updated upstream
 // 다이어리 조회
 exports.getUserDiary = async ({ userID }) => {
     try {
@@ -18,13 +19,41 @@ exports.getUserDiary = async ({ userID }) => {
         console.error('Error during diary retrieval:', error);
         throw new Error('Diary retrieval failed');
     }
+=======
+exports.analyzeDiary = async ({ userID, diaryText }) => {
+  try {
+    // 감정 분석 API로 요청
+    const response = await axios.post('http://localhost:8080/api/openAi/analyze', {
+      text: diaryText  // 문자열로 변환된 diaryText 전송
+    });
+
+    // 감정 데이터 API로 전송
+    await axios.post('http://localhost:8080/api/emotion/addemotion', {
+      userID: userID,
+      emotionData: response.data
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error during diary analysis:', error);
+
+    // 에러 메시지 개선
+    const errorMessage = error.response ? error.response.data : error.message;
+    throw new Error(`Diary analysis failed: ${errorMessage}`);
+  }
+>>>>>>> Stashed changes
 };
 
 // 다이어리 생성
 exports.createUserDiary = async ({ userID, diaryText }) => {
     try {
+<<<<<<< Updated upstream
       // 감정 분석
       const emotionData = await analyzeDiary(diaryText);
+=======
+        // 감정 분석
+        const emotionData = await exports.analyzeDiary({userID, diaryText});  // analyzeDiary 함수 호출
+>>>>>>> Stashed changes
 
       
   

@@ -15,11 +15,20 @@ exports.getUserEmotion = async (req, res) => {
 
 // 사용자의 감정 데이터 추가
 exports.addUserEmotion = async (req, res) => {
+<<<<<<< Updated upstream
     const { userID } = req;
     const { emotionData } = req.body;
+=======
+    const { userID, emotionData } = req.body;
+
+    // emotionData에서 emotionAnalysis만 가져오기
+    const emotion = emotionData.emotionAnalysis;
+
+    console.log('Emotion:', emotion);
+>>>>>>> Stashed changes
 
     try {
-        await emotionService.addUserEmotion({ userID, emotionData });
+        await emotionService.addUserEmotion({ userID, emotionData: emotion });
 
         res.status(200).json({ message: 'Emotion data added successfully' });
     } catch (error) {
