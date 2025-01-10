@@ -1,13 +1,12 @@
-require('dotenv').config();
 const mysql = require('mysql2/promise');
 
-// 데이터베이스 연결 설정을 환경 변수로 관리
+// 데이터베이스 연결 설정
 const db = mysql.createPool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  host: 'svc.sel4.cloudtype.app', // DB 호스트
+  port: 31711, // DB 포트
+  user: 'root', // DB 사용자 이름
+  password: 'snow1010', // DB 비밀번호
+  database: 'ascii', // DB 이름
 });
 
 module.exports = db;

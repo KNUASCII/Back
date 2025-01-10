@@ -1,25 +1,5 @@
 const { validationResult } = require('express-validator');
 const authService = require('../services/authService');
-const kakaoService = require('../services/kakaoLoginService');
-
-// 인증 코드 전송
-exports.sendVerificationCode = async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-
-    const { phone } = req.body;
-
-    try {
-        const result = await authService.sendVerificationCode(phone); 
-        res.status(200).json(result);
-    } catch (error) {
-        console.error('Error sending verification code:', error);
-        res.status(500).json({ error: 'Failed to send verification code', details: error.message });
-    }
-};
 
 // 회원가입
 exports.register = async (req, res) => {
@@ -29,16 +9,19 @@ exports.register = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, age, phone, password, region, code } = req.body;
+    const { userID, userName, userAge, phone, university, studentId, department, grade, password } = req.body;
 
     try {
         const result = await authService.verifyCodeAndRegister({ 
-            name, 
-            age, 
-            phone, 
-            password, 
-            region, 
-            code // code 전달
+            userID,
+            userName,
+            userAge,
+            phone,
+            university,
+            studentId,
+            department,
+            grade,
+            password,
         });
 
         res.status(201).json(result);
@@ -58,10 +41,10 @@ exports.login = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { phone, password } = req.body;
+    const { userID, password } = req.body;
 
     try {
-        const response = await authService.loginUser(phone, password);
+        const response = await authService.loginUser(userID, password);
 
          // 로그인 성공 시 200 상태 코드로 응답
         res.status(200).json(response);
