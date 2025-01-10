@@ -10,8 +10,15 @@ exports.analyzeEmotion = async (diaryText) => {
 
     // OpenAI API 요청 데이터
     const response = await axios.post(apiEndpoint, {
-      model: "text-davinci-003", // O1 - mini로 변경 필요
-      prompt: `Analyze the following diary text and determine the overall emotion or sentiment:\n\n${diaryText}`,
+      model: "gpt-4",
+      prompt: `
+      Analyze the following diary text and determine which emotion it expresses. 
+      The emotions to consider are: Joy, Sadness, Anger, Anxiety, and Apathy.
+      Please choose the emotion that best matches the text.
+
+      Diary Text: "${diaryText}"
+
+      Emotion: `,
       max_tokens: 150,
       temperature: 0.7,
       n: 1,

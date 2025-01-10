@@ -22,7 +22,6 @@ exports.register = async (req, res) => {
             studentId,
             department,
             grade,
-
         });
 
         res.status(201).json(result);

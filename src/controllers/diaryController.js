@@ -15,7 +15,8 @@ exports.getUserDiary = async (req, res) => {
 
 // 다이어리 생성
 exports.createUserDiary = async (req, res) => {
-  const { userId, diaryText } = req.body;
+  const { userId } = req;
+  const { diaryText } = req.body;
 
   try {
     const { message, emotionData } = await diaryService.createUserDiary({ userId, diaryText });
