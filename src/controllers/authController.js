@@ -3,11 +3,14 @@ const authService = require('../services/authService');
 
 // 회원가입
 exports.register = async (req, res) => {
+    console.log('Registration request:', req.body);
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
+
+    console.log('Registration request2:', req.body)
 
     const { userID, password, userName, birthday } = req.body;
 
@@ -28,19 +31,10 @@ exports.register = async (req, res) => {
 
 // 로그인
 exports.login = async (req, res) => {
-    // 오류 변수명 수정
-    const errors = validationResult(req);
-
-    // 오류가 있으면 400 상태 코드로 응답
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-
-    console.log('Login request:', req.body);
     const { userID, password } = req.body;
 
     try {
-        const response = await authService.loginUser(userID, password);
+        const response = await authService.loginUser({ userID, password });
 
          // 로그인 성공 시 200 상태 코드로 응답
         res.status(200).json(response);

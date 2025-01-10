@@ -28,6 +28,8 @@ exports.loginUser = async ({ userID, password }) => {
     const sql = 'SELECT * FROM users WHERE userID = ?';
     const [results] = await db.query(sql, [userID]);
 
+    console.log(results);
+
     if (results.length > 0) {
       const user = results[0];
       const match = await bcrypt.compare(password, user.password);
