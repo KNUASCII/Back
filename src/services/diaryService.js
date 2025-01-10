@@ -47,7 +47,7 @@ exports.createUserDiary = async ({ userID, diaryText }) => {
 // 다이어리 분석
 exports.analyzeDiary = async ({ diaryText }) => {
     try {
-        const response = await axios.post('http://localhost:8080/api/diary/analyze', {
+        const response = await axios.post('http://localhost:8080/api/openAi/analyze', {
             text: diaryText
         });
 

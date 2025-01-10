@@ -9,7 +9,7 @@ exports.register = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { userID,  password, userName, userAge, phone, university, studentId, department, grade } = req.body;
+    const { userID, password, userName, userAge, phone, university, studentId, department, grade } = req.body;
 
     try {
         const result = await authService.registerUser({ 
@@ -56,9 +56,9 @@ exports.login = async (req, res) => {
 };
 
 exports.changePassword = async (req, res) => {
-    const erros = validationResult(req);
+    const errors = validationResult(req);
 
-    if(!erros.isEmpty()) {
+    if(!errors.isEmpty()) {
         return res.status(400).json({ erros: errors.array() });
     }
 
@@ -70,8 +70,10 @@ exports.changePassword = async (req, res) => {
     try {
         // 비밀번호 변경 서비스 호출
         const result = await authService.changeUserPassword(userId, currentPassword, newPassword)
+
+        res.status(200).json(result);
     } catch (error) {
         console.error('Error changing password:', error);
-        res.status(400).json({ error: 'Password update failed', details: error.message });
+        return res.status(400).json({ errors: errors.array() })
     }
 };
