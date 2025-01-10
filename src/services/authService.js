@@ -1,6 +1,6 @@
-require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const db = require('../config/database');
+const jwt = require('../config/jwt');
 
 // 회원가입
 exports.registerUser = async ({ userID, password, userName, birthday }) => {
@@ -15,7 +15,10 @@ exports.registerUser = async ({ userID, password, userName, birthday }) => {
     `;
     await db.query(userSql, [userID, hashedPassword, userName, birthday]);
 
-    return { message: 'User registered successfully' };
+    // JWT 토큰 생성
+    const token = jwt.generateToken({ userID, userName });
+
+    return { message: 'User registered successfully', token };
   } catch (error) {
     console.error('Error during registration:', error);
     throw new Error('Registration failed');
@@ -28,14 +31,14 @@ exports.loginUser = async ({ userID, password }) => {
     const sql = 'SELECT * FROM users WHERE userID = ?';
     const [results] = await db.query(sql, [userID]);
 
-    console.log(results);
-
     if (results.length > 0) {
       const user = results[0];
       const match = await bcrypt.compare(password, user.password);
 
       if (match) {
-        return { message: 'Login successful', user };
+        // JWT 토큰 생성
+        const token = jwt.generateToken({ userID: user.userID, userName: user.userName });
+        return { message: 'Login successful', token, user };
       }
     }
 
@@ -47,10 +50,10 @@ exports.loginUser = async ({ userID, password }) => {
 };
 
 // 비밀번호 변경 - 유저가 설정에서 바꾸는 과정
-exports.changeUserPassword = async (userId, currentPassword, newPassword) => {
+exports.changeUserPassword = async (userID, currentPassword, newPassword) => {
   try {
     const sql = 'SELECT * FROM users WHERE userID = ?';
-    const [results] = await db.query(sql, [userId]);
+    const [results] = await db.query(sql, [userID]);
 
     if (results.length === 0) {
       throw new Error('User not found');
@@ -65,10 +68,13 @@ exports.changeUserPassword = async (userId, currentPassword, newPassword) => {
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    const changePasswordSql = 'UPDATE users SET password = ? WHERE id = ?';
-    await db.query(changePasswordSql, [hashedPassword, userId]);
+    const changePasswordSql = 'UPDATE users SET password = ? WHERE userID = ?';
+    await db.query(changePasswordSql, [hashedPassword, userID]);
 
-    return { message: 'Password changed successfully' };
+    // JWT 토큰 재발급
+    const token = jwt.generateToken({ userID: user.userID, userName: user.userName });
+
+    return { message: 'Password changed successfully', token };
   } catch (error) {
     console.error('Error changing password:', error);
     throw new Error('Failed to change password');

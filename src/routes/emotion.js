@@ -1,13 +1,9 @@
 const express = require('express');
-const emtionController = require('../controllers/emotionController');
+const emotionController = require('../controllers/emotionController');
 
 const router = express.Router();
 
-// GET /api/emtion - 사용자의 감정 분석
-router.get('/userEmotion', emtionController.getUserEmotion);
-
-// 백엔드 전용
-// POST /api/emtion - 사용자의 감정 데이터 추가
-router.post('/addEmotion', emtionController.addUserEmotion);
+router.get('/userEmotion', emotionController.getUserEmotion);  // 인증을 서비스에서 처리
+router.post('/addEmotion', emotionController.addUserEmotion);  // 인증을 서비스에서 처리
 
 module.exports = router;

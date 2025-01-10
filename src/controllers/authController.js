@@ -3,14 +3,11 @@ const authService = require('../services/authService');
 
 // 회원가입
 exports.register = async (req, res) => {
-    console.log('Registration request:', req.body);
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-
-    console.log('Registration request2:', req.body)
 
     const { userID, password, userName, birthday } = req.body;
 

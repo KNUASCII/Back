@@ -1,34 +1,5 @@
-require('dotenv').config();
 const axios = require('axios');
-
-<<<<<<< Updated upstream
-// OpenAI API 호출 함수
-exports.analyzeEmotion = async (diaryText) => {
-  try {
-    // OpenAI API 엔드포인트와 API 키 설정
-    const apiKey = process.env.OPENAI_API_KEY;
-    const apiEndpoint = 'https://api.openai.com/v1/completions';  // GPT-3 또는 GPT-4 모델 사용
-
-    // OpenAI API 요청 데이터
-    const response = await axios.post(apiEndpoint, {
-      model: "gpt-4",
-      prompt: `
-      Analyze the following diary text and determine which emotion it expresses. 
-      The emotions to consider are: Joy, Sadness, Anger, Anxiety, and Apathy.
-      Please choose the emotion that best matches the text.
-
-      Diary Text: "${diaryText}"
-
-      Emotion: `,
-      max_tokens: 150,
-      temperature: 0.7,
-      n: 1,
-      stop: null
-    }, {
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-=======
+const { OPEN_API_KEY } = require('../config/oepnAPI');
 // 감정 분석 함수
 exports.analyzeEmotion = async (text) => {
   try {
@@ -79,22 +50,16 @@ exports.analyzeEmotion = async (text) => {
           }
         ],
         max_tokens: 50,
-        temperature: 0.7,
+        temperature: 0.7
       },    
       {
         headers: {
           'Authorization': `Bearer ${OPEN_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
->>>>>>> Stashed changes
+          'Content-Type': 'application/json'
+        }
       }
-    });
+    );
 
-<<<<<<< Updated upstream
-    // 응답에서 감정 분석 결과 반환
-    const analysis = response.data.choices[0].text.trim();
-    return analysis;
-=======
     // 응답 처리
     if (response.status === 200) {
       const emotion = response.data.choices[0]?.message?.content?.trim();
@@ -110,7 +75,6 @@ exports.analyzeEmotion = async (text) => {
     } else {
       throw new Error(`API responded with status code: ${response.status}`);
     }
->>>>>>> Stashed changes
   } catch (error) {
     console.error('Error with OpenAI API:', error);
     throw new Error('Failed to analyze text with OpenAI API');

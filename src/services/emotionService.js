@@ -1,14 +1,27 @@
+const jwt = require('../config/jwt'); // jwt.js 경로
 const db = require('../config/database');
 
-exports.getUserEmotion = async ({ userID }) => {
+exports.getUserEmotion = async (req, res) => {
     try {
+        // 클라이언트에서 토큰을 헤더에서 추출
+        const token = req.headers['authorization']?.split(' ')[1]; // "Bearer <token>" 형식
+        
+        if (!token) {
+            return res.status(403).json({ message: 'No token provided' });
+        }
+
+        // 토큰 검증
+        const decoded = jwt.verifyToken(token); // verifyToken 함수 호출
+
+        // 검증된 토큰에서 userID 추출
+        const userID = decoded.userID;
+
         // 감정 데이터를 가져오는 SQL 쿼리
         const sql = `
             SELECT emotion_data
             FROM user_emotion
             WHERE userId = ?
         `;
-
         const [result] = await db.query(sql, [userID]);
 
         if (result.length === 0) {
@@ -46,13 +59,15 @@ exports.getUserEmotion = async ({ userID }) => {
 
 exports.addUserEmotion = async ({ userID, emotionData }) => {
     try {
+        console.log(userID, emotionData);
+
         // 기존 감정 데이터를 가져오는 SQL 쿼리
         const sqlSelect = `
             SELECT emotion_data
             FROM user_emotion
             WHERE userId = ?
         `;
-        const [result] = await db.query(sqlSelect, [userID]);
+        const [result] = await db.query(sqlSelect, [userID]); // userID를 body에서 가져옴
 
         // 감정 데이터를 업데이트할 준비
         let newEmotionData = emotionData;
@@ -72,9 +87,9 @@ exports.addUserEmotion = async ({ userID, emotionData }) => {
         // 데이터 삽입/업데이트
         await db.query(sqlUpdate, [userID, newEmotionData]);
 
-        console.log('Emotion data added successfully');
+        console.log({ message: 'Emotion data added successfully' });
     } catch (error) {
         console.error('Error adding emotion data:', error);
-        throw new Error('Failed to add emotion data');
+        console.log({ message: 'Failed to add emotion data' });
     }
 };
