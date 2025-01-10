@@ -1,4 +1,3 @@
-require('dotenv').config();
 const axios = require('axios');
 const db = require('../config/database');
 
@@ -26,6 +25,8 @@ exports.createUserDiary = async ({ userID, diaryText }) => {
     try {
       // 감정 분석
       const emotionData = await analyzeDiary(diaryText);
+
+      
   
       // 다이어리 생성 SQL
       const sql = `
@@ -41,13 +42,17 @@ exports.createUserDiary = async ({ userID, diaryText }) => {
       console.error('Error during diary creation:', error);
       throw new Error('Diary creation failed');
     }
-  };
+};
 
 // 다이어리 분석
 exports.analyzeDiary = async ({ diaryText }) => {
     try {
         const response = await axios.post('http://localhost:8080/api/diary/analyze', {
             text: diaryText
+        });
+
+        await axios.post('http://localhost:8080/api/emotion/addemotion', {
+            emotionData: response.data
         });
 
         return response.data;
