@@ -9,19 +9,14 @@ exports.register = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { userID, password, userName, userAge, phone, university, studentId, department, grade } = req.body;
+    const { userID, password, userName, birthday } = req.body;
 
     try {
         const result = await authService.registerUser({ 
             userID,
             password,
             userName,
-            userAge,
-            phone,
-            university,
-            studentId,
-            department,
-            grade,
+            birthday
         });
 
         res.status(201).json(result);
@@ -41,6 +36,7 @@ exports.login = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
+    console.log('Login request:', req.body);
     const { userID, password } = req.body;
 
     try {
