@@ -1,7 +1,6 @@
 const express = require('express');
 const authController = require('../controllers/authController');
 const { validateAuthInput, validatePhoneInput } = require('../middlewares/validationMiddleware');
-const { kakaoLogin } = require('../services/kakaoLoginService');
 
 const router = express.Router();
 
