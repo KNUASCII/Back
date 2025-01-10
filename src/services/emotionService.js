@@ -23,11 +23,11 @@ exports.getUserEmotion = async ({ userID }) => {
 
         // 각 감정의 개수를 세기 위한 객체
         const emotionCount = {
-            joy: 0,
-            sadness: 0,
-            anger: 0,
-            anxiety: 0,
-            lethargy: 0
+            기쁨: 0,
+            슬픔: 0,
+            분노: 0,
+            불안: 0,
+            무기력: 0
         };
 
         // 감정 데이터를 순회하면서 카운트
