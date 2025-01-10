@@ -2,11 +2,15 @@
   "name": "back",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
+  "bin": {
+    "back": "./src/server.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "dev": "node sver.js"
+    "dev": "node sver.js",
+    "build": "pkg . --outpath dist --targets node16-macos-x64,node16-linux-x64,node16-win-x64"
   },
   "keywords": [],
   "author": "",
@@ -26,5 +30,8 @@
     "mysql2": "^3.12.0",
     "nodemon": "^3.1.9",
     "openai": "^4.78.0"
+  },
+  "devDependencies": {
+    "pkg": "^5.8.1"
   }
 }
