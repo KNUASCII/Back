@@ -9,11 +9,12 @@ exports.register = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { userID, userName, userAge, phone, university, studentId, department, grade, password } = req.body;
+    const { userID,  password, userName, userAge, phone, university, studentId, department, grade } = req.body;
 
     try {
-        const result = await authService.verifyCodeAndRegister({ 
+        const result = await authService.registerUser({ 
             userID,
+            password,
             userName,
             userAge,
             phone,
@@ -21,7 +22,7 @@ exports.register = async (req, res) => {
             studentId,
             department,
             grade,
-            password,
+
         });
 
         res.status(201).json(result);

@@ -1,4 +1,4 @@
 const express = require('express');
-const emtionController = require('../controllers/emtionController');
+const emtionService = reqire('../services/emtionService');
 
 const router = express.Router();
