@@ -1,5 +1,5 @@
-require('dotenv').config();
 const bcrypt = require('bcryptjs');
+const jwt = require('../config/jwt');
 const db = require('../config/database');
 
 // 회원가입
@@ -35,7 +35,17 @@ exports.loginUser = async ({ userID, password }) => {
       const match = await bcrypt.compare(password, user.password);
 
       if (match) {
-        return { message: 'Login successful', user };
+        // JWT 생성
+        const payload = {
+          userID: user.userID,  // 고유 식별자로 userID 사용
+          userName: user.userName,
+        };
+
+        // JWT 토큰 생성 (유효 기간을 설정할 수도 있음)
+        const token = jwt.generateToken(payload);
+
+        // 로그인 성공 시 토큰과 함께 응답
+        return { message: 'Login successful', token };
       }
     }
 

@@ -15,8 +15,9 @@ exports.getUserEmotion = async (req, res) => {
 
 // 사용자의 감정 데이터 추가
 exports.addUserEmotion = async (req, res) => {
-    const { userID } = req;
-    const { emotionData } = req.body;
+    console.log('addUserEmotion');
+    const { userID, emotionData } = req.body;
+    console.log('userID:', userID);
 
     try {
         await emotionService.addUserEmotion({ userID, emotionData });

@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 
 // JWT 비밀키 및 기본 설정
-const JWT_SECRET = process.env.JWT_SECRET || 'default-secret';
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
+const JWT_SECRET = 'main_secret_key';
+const JWT_EXPIRES_IN = '24h';
 
 // 토큰 생성 함수
 exports.generateToken = (payload) => {

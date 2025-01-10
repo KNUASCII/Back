@@ -1,40 +1,52 @@
-require('dotenv').config();
 const axios = require('axios');
+const { OPEN_API_KEY } = require('../config/oepnAPI');
 
-// OpenAI API 호출 함수
 exports.analyzeEmotion = async (diaryText) => {
   try {
-    // OpenAI API 엔드포인트와 API 키 설정
-    const apiKey = process.env.OPENAI_API_KEY;
-    const apiEndpoint = 'https://api.openai.com/v1/completions';  // GPT-3 또는 GPT-4 모델 사용
-
-    // OpenAI API 요청 데이터
-    const response = await axios.post(apiEndpoint, {
-      model: "gpt-4",
-      prompt: `
-      Analyze the following diary text and determine which emotion it expresses. 
-      The emotions to consider are: Joy, Sadness, Anger, Anxiety, and Apathy.
-      Please choose the emotion that best matches the text.
-
-      Diary Text: "${diaryText}"
-
-      Emotion: `,
-      max_tokens: 150,
-      temperature: 0.7,
-      n: 1,
-      stop: null
-    }, {
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
+    // OpenAI API 호출
+    const response = await axios.post(
+      'https://api.openai.com/v1/chat/completions',
+      {
+        model: "gpt-4",
+        messages: [
+          {
+            role: "system",
+            content: `You are an emotion classifier. Your job is to classify the following text into one of these five emotions: Joy, Sadness, Anger, Anxiety, Lethargy. If the text does not match any of these emotions, please respond with "Cannot classify."`
+          },
+          {
+            role: "user",
+            content: `Classify the following text into one of these emotions: Joy, Sadness, Anger, Anxiety, Lethargy. Text: "${diaryText}"`
+          }
+        ],
+        max_tokens: 50,
+        temperature: 0.7,
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${OPEN_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
       }
-    });
+    );
 
-    // 응답에서 감정 분석 결과 반환
-    const analysis = response.data.choices[0].text.trim();
-    return analysis;
+    // 응답 처리
+    if (response.status === 200) {
+      const emotion = response.data.choices[0]?.message?.content?.trim();
+
+      console.log("OpenAI Response:", emotion); // 디버깅용 로그
+
+      const validEmotions = ["Joy", "Sadness", "Anger", "Anxiety", "Lethargy"];
+      if (validEmotions.includes(emotion)) {
+        return emotion; // 유효한 감정을 반환
+      } else {
+        console.warn("Invalid emotion received. Returning 'Cannot classify.'");
+        return "Cannot classify"; // 유효하지 않은 응답 처리
+      }
+    } else {
+      throw new Error(`API responded with status code: ${response.status}`);
+    }
   } catch (error) {
-    console.error('Error with OpenAI API:', error);
-    throw new Error('Failed to analyze text with OpenAI API');
+    console.error("OpenAI API error:", error.response?.data || error.message);
+    throw new Error(`Failed to analyze emotion: ${error.message}`);
   }
 };

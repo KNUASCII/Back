@@ -15,12 +15,11 @@ exports.getUserDiary = async (req, res) => {
 
 // 다이어리 생성
 exports.createUserDiary = async (req, res) => {
-  const { userId } = req;
+  const { userID } = req;
   const { diaryText } = req.body;
 
   try {
-    const { message, emotionData } = await diaryService.createUserDiary({ userId, diaryText });
-
+    const { message, emotionData } = await diaryService.createUserDiary({ userID, diaryText });
     res.status(201).json({ message, emotionData });
   } catch (error) {
     res.status(500).json({ message: 'Failed to create diary' });
